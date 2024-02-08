@@ -19,7 +19,7 @@ def generate_positional_encoding(vector_dim: int, sequence_length: int) -> torch
     # Create a tensor of indices from 0 to 'vector_dim - 1' with float data type.
     embedding_indices = torch.arange(vector_dim, dtype=torch.float)
     # Calculate an exponential factor for positional encoding using a base of 10000.
-    exponential_block = torch.pow(10000.0, 2.0 * (embedding_indices / vector_dim))
+    exponential_block = torch.pow(10000, 2 * (embedding_indices / vector_dim))
     # Create a matrix of token indices along the sequence length.
     # Each row corresponds to a position in the sequence, and columns represent different embedding dimensions.
     tokens_index_matrix = (

@@ -1,7 +1,7 @@
 import torch
 
 
-def generate_positional_encoding(vector_dim: int, sequence_length: int) -> torch.tensor:
+def generate_positional_encoding(sequence_length: int, vector_dim: int) -> torch.tensor:
     """
     Function to generate positional encoding for each of the tokens
     in a sequence using sine and cosine functions.

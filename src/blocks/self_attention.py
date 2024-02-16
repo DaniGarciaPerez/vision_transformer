@@ -1,5 +1,6 @@
 import torch
 from torch import nn
+import itertools
 
 
 class SelfAttention:
@@ -19,7 +20,14 @@ class SelfAttention:
 
     def compute_attention_weights(self):
         """"""
-        querys, keys, values = self.mul_input(self.init_linear_weights())
-        print(querys, keys, values)
-        print(torch.mul(keys[1], querys))
-        return
+        queries, keys, values = self.mul_input(self.init_linear_weights())
+        softmax = nn.Softmax(dim=-1)
+        return torch.matmul(
+            softmax(
+                torch.div(
+                    torch.matmul(queries, torch.transpose(keys, 0, 1)),
+                    torch.tensor(queries.size(dim=1)),
+                )
+            ),
+            values,
+        )

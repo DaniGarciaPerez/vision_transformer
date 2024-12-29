@@ -1,11 +1,17 @@
 from src.blocks import positional_encoding, self_attention
+from src.blocks.positional_encoding import PositionalEncoding
+from sentence_transformers import SentenceTransformer
 import torch
 
-input_embeddings = torch.rand((5, 3))
-positional_econding_vectors = positional_encoding.generate_positional_encoding(
-    sequence_length=input_embeddings.size()[0],
-    vector_dim=input_embeddings.size()[1],
+
+model = SentenceTransformer("mixedbread-ai/mxbai-embed-large-v1", truncate_dim=4)
+docs = ["man", "dog"]
+input_matrix = torch.from_numpy(model.encode(docs))
+
+positional_encoding_class = PositionalEncoding(input_matrix)
+positiona_encoding_matrix = (
+    positional_encoding_class.generate_positional_encoding_matrix()
 )
-input_matrix = torch.mul(input_embeddings, positional_econding_vectors)
-attention = self_attention.SelfAttention(input_matrix, 1)
-attention_weights = attention.compute_attention_weights()
+
+attention = self_attention.SelfAttention(input_matrix, 2)
+print(attention.scaled_dot_product_attention())

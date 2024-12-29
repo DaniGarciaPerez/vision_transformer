@@ -10,24 +10,31 @@ class SelfAttention:
         self.input_matrix = input_matrix
         self.number_of_heads = number_of_heads
 
-    def init_linear_weights(self):
-        """ """
-        return torch.rand(3, *self.input_matrix.shape)
-
     def mul_input(self, weights=None):
         """ """
+        if weights == None:
+            weights = torch.rand(3, *self.input_matrix.shape)
         return torch.mul(self.input_matrix, weights)
 
-    def compute_attention_weights(self):
+    def scaled_dot_product_attention(self, weights=None):
         """"""
-        queries, keys, values = self.mul_input(self.init_linear_weights())
-        softmax = nn.Softmax(dim=-1)
-        return torch.matmul(
-            softmax(
-                torch.div(
-                    torch.matmul(queries, torch.transpose(keys, 0, 1)),
-                    torch.tensor(queries.size(dim=1)),
-                )
-            ),
-            values,
+        querys, keys, values = self.mul_input()
+
+        # Apply matmul, scaling factor
+        query_key_scaled = torch.div(
+            torch.matmul(keys, querys.T),
+            torch.sqrt(torch.Tensor([querys.shape[1]])),
         )
+        # Get Softmax values
+        softmax = torch.nn.Softmax(dim=1)
+        softmax_values = softmax(query_key_scaled)
+
+        return torch.matmul(softmax_values, values)
+
+    def multihead_attention(self):
+
+        split_input_matrix = torch.split(self.input_matrix, self.number_of_heads, dim=1)
+        for matrix in split_input_matrix:
+            print(matrix)
+
+        return None

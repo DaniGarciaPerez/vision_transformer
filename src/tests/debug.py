@@ -1,39 +1,51 @@
 import os
 import torch
+from torch import nn
+import cv2
 from pathlib import Path
-from sentence_transformers import SentenceTransformer
-from src.model_components.positional_encoding import PositionalEncoding
-from src.model_components.patch_projection import PatchLinearProjection
-from src.encoder_block.encoder import ViTEncoder
-from src.model_components.mlp_head import MLPHead
+from src.model_components.vit import VisionTransformer
 
 
 D_MODEL = 768
-N_CLASSES = 3
+N_CLASSES = 100
 PATCH_SIZE = 16
 N_HEADS = 3
 MLP_SIZE = 3072
 N_LAYERS = 12
 DROPOUT_RATIO = 0.1
+EPOCHS = 1
+N_CHANNELS = 3
+BATCH_SIZE = 10
 
-# model = SentenceTransformer("mixedbread-ai/mxbai-embed-large-v1", truncate_dim=D_MODEL)
-# text = "The feline cat"
-# docs = text.split(" ")
-# input_matrix = torch.from_numpy(model.encode(docs))
+
+images_path = os.path.join(Path(__file__).parent.parent.parent, "data", "test")
 
 image_path = os.path.join(
     Path(__file__).parent.parent.parent, "data", "test", "cat.jpg"
 )
 
-# Patch projection + Positional encoding block
-x = PatchLinearProjection(patch_size=PATCH_SIZE, d_model=D_MODEL)(image_path)
-x = PositionalEncoding(x).forward()
 
-for layer in range(N_LAYERS):
-    x = ViTEncoder(D_MODEL, N_HEADS, MLP_SIZE, DROPOUT_RATIO)(x)
+images_batch = torch.stack(
+    [
+        torch.from_numpy(cv2.imread(image_path)).to(torch.float32).movedim(2, 0)
+        for image in range(0, BATCH_SIZE)
+    ],
+    dim=0,
+)
 
-# Global Average Pooling for classification instead of using a class token (GAP)
-x = x.mean(dim=0)
-mlp_head_output = MLPHead(D_MODEL, N_CLASSES)(x)
+print(images_batch.shape)
 
-print(mlp_head_output)
+
+model = VisionTransformer(
+    PATCH_SIZE,
+    D_MODEL,
+    MLP_SIZE,
+    N_HEADS,
+    DROPOUT_RATIO,
+    N_LAYERS,
+    N_CLASSES,
+    N_CHANNELS,
+    BATCH_SIZE,
+)
+
+print(model(images_batch).shape)

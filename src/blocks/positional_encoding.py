@@ -1,20 +1,17 @@
 """"TODO: include docstring"""
 
 import torch
+from torch import nn
 
 
-class PositionalEncoding:
-    """
-        Params:
-    ---------
-        vector_dim: int -> Dimension of the input vector for each of the sequence tokens.
-        sequence_length: int -> Max. length of the total sequence of tokens.
-    """
+class PositionalEncoding(nn.Module):
+    """ """
 
     def __init__(
         self,
         input_matrix: torch.tensor,
     ) -> None:
+        super(PositionalEncoding, self).__init__()
         self.input_matrix = input_matrix
         self.sequence_length = input_matrix.shape[0]
         self.vector_dim = input_matrix.shape[1]
@@ -29,10 +26,10 @@ class PositionalEncoding:
             positional_encoding: torch.tensor -> Positional encoding matrix.
 
         """
-        # Create a tensor of indices from 0 to 'vector_dim - 1' with float data type.
+        # Create a tensor of indices from 0 to 'vector_dim - 1' with float data type to capture embeddings length.
         embedding_indices = torch.arange(self.vector_dim, dtype=torch.float)
         # Calculate an exponential factor for positional encoding using a base of 10000.
-        exponential_block = torch.pow(10000, 2 * (embedding_indices / self.vector_dim))
+        exponential_block = torch.pow(10000, (embedding_indices / self.vector_dim))
         # Create a matrix of token indices along the sequence length.
         # Each row corresponds to a position in the sequence, and columns represent different embedding dimensions.
         tokens_index_matrix = (
@@ -49,5 +46,7 @@ class PositionalEncoding:
 
     def generate_positional_encoding_matrix(self):
         """ """
+        # Generate positional encoding values
         positional_encoding_values = self.generate_positional_encoding_values()
+        # Add positional encoding values to the embeddings matrix
         return torch.add(self.input_matrix, positional_encoding_values)

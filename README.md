@@ -1,13 +1,13 @@
-## <p align="center"> 🚧 README IN PROGRESS 🚧 </p>
+## <p align="center"> 🚧 REPO IN PROGRESS 🚧 </p>
 
 
-# <p align="center"> **Time Series Transformers from scratch** </p>
+# <p align="center"> **Vision Transformer from scratch** </p>
 
 ## **Content**
 
 [1. Overview](#overview)
 
-A repo to explore the implementation of Transformers from scratch and its application to Time Series.
+A repo to explore the implementation of a Vision Transformer from scratch..
 
 [2. Structure of the project](#structure-of-the-project)
 

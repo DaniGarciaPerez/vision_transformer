@@ -1,14 +1,22 @@
-from src.blocks.positional_encoding import PositionalEncoding
-from sentence_transformers import SentenceTransformer
 import torch
+from sentence_transformers import SentenceTransformer
+from src.blocks.multihead_attention import MultiHeadAttention
+from src.blocks.positional_encoding import PositionalEncoding
 
 
 model = SentenceTransformer("mixedbread-ai/mxbai-embed-large-v1", truncate_dim=4)
-docs = ["the", "dog", "walks"]
+text = "The cat jumped"
+docs = text.split(" ")
 input_matrix = torch.from_numpy(model.encode(docs))
-print(input_matrix)
 
 positional_encoding_class = PositionalEncoding(input_matrix)
-positiona_encoding_matrix = (
+positional_encoding_matrix = (
     positional_encoding_class.generate_positional_encoding_matrix()
 )
+
+multihead_attention = MultiHeadAttention(
+    positional_encoding_matrix,
+    positional_encoding_matrix.shape[1],
+    3,
+).forward()
+print(multihead_attention)

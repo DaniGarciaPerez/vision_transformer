@@ -12,9 +12,11 @@ from torch import nn
 
 class ScaledDotProductAttention(nn.Module):
     """
-    Class for the implementation of the scaled dot-product attention calculation for set of different matrices.
+    Class for the implementation of the scaled dot-product
+    attention calculation for set of different matrices.
 
-    modules:
+    Attributes:
+    ------------
         forward -> computes the actual scaled dot-product attention
     """
 
@@ -40,13 +42,13 @@ class ScaledDotProductAttention(nn.Module):
 
         params
         --------
-            q: torch.tensor -> The matrix with the linearly transformed queries matrix.
-            k: torch.tensor -> The matrix with the linearly transformed keys matrix.
-            v: torch.tensor -> The matrix with the linearly transformed values matrix.
+            q: torch.tensor -> The queries matrix. Shape (length_sequence, d_k).
+            k: torch.tensor -> The keys matrix. Shape (length_sequence, d_k).
+            v: torch.tensor -> The values matrix. Shape (length_sequence, d_k).
 
-        return
+        returns
         -------
-            attention_values: torch.tnesor -> The matrix with the result from the attention calculation.
+            attention_values: torch.tnesor -> The result of the attention calculation.
 
         """
         # 1. Matrix multiplication of queries and keys transposed.
@@ -56,5 +58,5 @@ class ScaledDotProductAttention(nn.Module):
         # 3. Calculate attention weights applying Softmax.
         attention_weights = self.softmax(scaled_attention_scores)
 
-        # 4. Apply attention weights to valuesS
+        # 4. Apply attention weights to values
         return torch.matmul(attention_weights, v)

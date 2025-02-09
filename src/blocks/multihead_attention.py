@@ -13,7 +13,7 @@ class MultiHeadAttention(nn.Module):
     def __init__(self, positional_embedding_matrix, d_model, n_heads):
         """"""
         super(MultiHeadAttention, self).__init__()
-        self.positional_embedding_matrix = positional_embedding_matrix
+        self.pe_matrix = positional_embedding_matrix
         self.n_heads = n_heads
         self.d_model = d_model
 
@@ -24,29 +24,29 @@ class MultiHeadAttention(nn.Module):
 
     def split_heads(self, queries, keys, values):
 
-        splits = torch.div(self.d_model, self.n_heads, rounding_mode="floor")
-        k_heads = torch.split(keys, splits)
-        v_heads = torch.split(queries, splits)
-        q_heads = torch.split(values, splits)
+        splits = self.d_model // self.n_heads
+        k_heads, v_heads, q_heads = (
+            torch.split(keys, splits),
+            torch.split(queries, splits),
+            torch.split(values, splits),
+        )
 
         return k_heads, v_heads, q_heads
 
     def compute_attention(self, k_heads, v_heads, q_heads):
         """ """
+        attention = ScaledDotProductAttention(self.d_model)
 
-        return [
-            ScaledDotProductAttention(self.d_model).forward(
-                k_heads[head], v_heads[head], q_heads[head]
-            )
-            for head in range(0, self.n_heads)
-        ]
+        return attention.forward(k_heads, v_heads, q_heads)
 
     def forward(self):
 
         # Linear transformation
-        q = self.q_weights(self.positional_embedding_matrix)
-        k = self.k_weights(self.positional_embedding_matrix)
-        v = self.v_weights(self.positional_embedding_matrix)
+        q, k, v = (
+            self.q_weights(self.pe_matrix),
+            self.k_weights(self.pe_matrix),
+            self.v_weights(self.pe_matrix),
+        )
 
         # Multihead split
         k_heads, v_heads, q_heads = self.split_heads(q, k, v)

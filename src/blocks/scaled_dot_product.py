@@ -52,7 +52,11 @@ class ScaledDotProductAttention(nn.Module):
 
         """
         # 1. Matrix multiplication of queries and keys transposed.
-        attention_scores = torch.matmul(q, k.transpose(-2, -1))
+        # attention_scores = torch.matmul(q, k.transpose(-2, -1))
+        attention_scores = torch.matmul(
+            q, tuple(map(lambda x: torch.transpose(x, -2, -1), k))
+        )
+        print(attention_scores)
         # 2. Compute attention scaled attention scores.
         scaled_attention_scores = torch.div(attention_scores, (self.d_k**0.5))
         # 3. Calculate attention weights applying Softmax.

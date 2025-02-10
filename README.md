@@ -7,7 +7,7 @@
 
 [1. Overview](#overview)
 
-A repo to explore the implementation of a Vision Transformer from scratch..
+A repo to explore the implementation of a Vision Transformer from scratch.
 
 [2. Structure of the project](#structure-of-the-project)
 

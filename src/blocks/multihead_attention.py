@@ -1,9 +1,12 @@
 """
+Author: Daniel Garcia
+
+Description: 
+
 """
 
 import torch
 from torch import nn
-from dotenv import load_dotenv
 from src.blocks.scaled_dot_product import ScaledDotProductAttention
 
 

@@ -3,6 +3,8 @@ from sentence_transformers import SentenceTransformer
 from src.blocks.multihead_attention import MultiHeadAttention
 from src.blocks.positional_encoding import PositionalEncoding
 from src.blocks.patch_projection import LinearPatchProjection
+from pathlib import Path
+import os
 
 # model = SentenceTransformer("mixedbread-ai/mxbai-embed-large-v1", truncate_dim=4)
 # text = "The feline cat"
@@ -21,5 +23,5 @@ from src.blocks.patch_projection import LinearPatchProjection
 
 image_patches_class = LinearPatchProjection()
 image_patches_class.split_image_patches(
-    r"C:\Users\d.j.garcia\OneDrive - Accenture\Proyectos\personal\transformers-time-series-exploration\data\test\dogs.jpg"
+    os.path.join(Path(__file__).parent.parent.parent, "data", "test", "dogs.jpg")
 )

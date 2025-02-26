@@ -13,7 +13,7 @@ import os
 image_path = os.path.join(
     Path(__file__).parent.parent.parent, "data", "test", "dogs.jpg"
 )
-image_patches_class = PatchLinearProjection(18)
+image_patches_class = PatchLinearProjection(num_patches=9, d_model=4)
 input_matrix = image_patches_class.forward(image_path)
 print(input_matrix.shape)
 

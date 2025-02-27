@@ -6,24 +6,25 @@ from src.blocks.patch_projection import PatchLinearProjection
 from pathlib import Path
 import os
 
+d_model = 4
+
 # model = SentenceTransformer("mixedbread-ai/mxbai-embed-large-v1", truncate_dim=4)
 # text = "The feline cat"
 # docs = text.split(" ")
 # input_matrix = torch.from_numpy(model.encode(docs))
+
 image_path = os.path.join(
-    Path(__file__).parent.parent.parent, "data", "test", "dogs.jpg"
+    Path(__file__).parent.parent.parent, "data", "test", "cats.jpg"
 )
-image_patches_class = PatchLinearProjection(num_patches=9, d_model=4)
+patch_size = 16
+image_patches_class = PatchLinearProjection(patch_size=patch_size, d_model=d_model)
 input_matrix = image_patches_class.forward(image_path)
-print(input_matrix.shape)
 
-# positional_encoding = PositionalEncoding(input_matrix)
-# positional_encoding_matrix = positional_encoding.forward()
+positional_encoding_matrix = PositionalEncoding(input_matrix).forward()
+multihead_attention = MultiHeadAttention(
+    positional_encoding_matrix,
+    positional_encoding_matrix.shape[1],
+    3,
+).forward()
 
-# multihead_attention = MultiHeadAttention(
-#     positional_encoding_matrix,
-#     positional_encoding_matrix.shape[1],
-#     3,
-# ).forward()
-
-# print(multihead_attention)
+print(multihead_attention)

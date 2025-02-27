@@ -12,45 +12,60 @@ from torch import nn
 
 
 class PatchLinearProjection(nn.Module):
-    """TODO: Add docstring"""
+    """
+    A module that applies a linear projection to image patches.
 
-    def __init__(self, num_patches, d_model):
+    This module splits an input image into patches, applies a linear transformation
+    to each patch, and returns the projected patches.
+
+    attributes:
+    ------------
+        patch_size:int -> The size of each patch.
+        d_model:int -> The number of output features for each patch.
+        linear_weights:nn.Conv2d -> The linear weights for the projection.
+    """
+
+    def __init__(self, patch_size: int, d_model: int, input_channels: int = 3):
         """
-        Initializes the LinearPatchProjection module.
+        Initializes the PatchLinearProjection module.
 
         params:
+        -------
+            patch_size:int -> The size of each patch.
+            d_model:int -> The number of output features for each patch.
         """
         # Instantiate the base class
         super(PatchLinearProjection, self).__init__()
-        self.num_patches = num_patches
+        self.patch_size = patch_size
         self.d_model = d_model
-        self.linear_weights = nn.Linear(num_patches, d_model)
+        # Initialize the linear weights as a convolutional layer
+        # with a kernel size equal to the patch size
+        self.linear_weights = nn.Conv2d(
+            input_channels=input_channels, self.d_model, kernel_size=patch_size, stride=patch_size
+        )
 
-    def split_image_patches(self, image):
-        """TODO: Add docstring"""
+    def forward(self, image_to_transform:str) -> torch.tensor:
+        """
+        Applies the linear projection to the input image.
 
-        # Read the image and trasnform to a torch tensor with shape CxHxW
+        params:
+        --------
+            image_to_transform:str -> The path to the input image.
+
+        returns:
+        ---------
+            torch.tensor -> The projected patches.
+        """
+        # Read the image and convert it to a tensor
         image_matrix = (
-            torch.from_numpy(cv2.imread(image)).to(torch.float32).movedim(2, 0)
+            torch.from_numpy(cv2.imread(image_to_transform))
+            .to(torch.float32)
+            # Move the number of channels to the first dimension
+            .movedim(2, 0)
         )
 
-        kernel_size = int(
-            torch.sqrt(
-                torch.tensor(
-                    image_matrix.shape[2] * image_matrix.shape[1] // self.num_patches
-                )
-            )
+        # Apply the convolutional layer or linear projection to the image
+        # Then flatten and transpose
+        return torch.transpose(
+            self.linear_weights(image_matrix).flatten(start_dim=1), 0, 1
         )
-        print(kernel_size)
-
-        unfold = nn.Unfold(kernel_size=(kernel_size, kernel_size), stride=kernel_size)
-        unfolded_image = torch.transpose(unfold(image_matrix), 0, 1)
-
-        return torch.nn.functional.normalize(unfolded_image)
-
-    def forward(self, image_to_transform) -> torch.tensor:
-        """TODO: Add docstring"""
-
-        image_patches = self.split_image_patches(image_to_transform)
-
-        return self.linear_weights(image_patches)

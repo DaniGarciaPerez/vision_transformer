@@ -41,10 +41,13 @@ class PatchLinearProjection(nn.Module):
         # Initialize the linear weights as a convolutional layer
         # with a kernel size equal to the patch size
         self.linear_weights = nn.Conv2d(
-            input_channels=input_channels, self.d_model, kernel_size=patch_size, stride=patch_size
+            in_channels=input_channels,
+            out_channels=self.d_model,
+            kernel_size=patch_size,
+            stride=patch_size,
         )
 
-    def forward(self, image_to_transform:str) -> torch.tensor:
+    def forward(self, image_to_transform: str) -> torch.tensor:
         """
         Applies the linear projection to the input image.
 
@@ -58,8 +61,7 @@ class PatchLinearProjection(nn.Module):
         """
         # Read the image and convert it to a tensor
         image_matrix = (
-            torch.from_numpy(cv2.imread(image_to_transform))
-            .to(torch.float32)
+            torch.from_numpy(cv2.imread(image_to_transform)).to(torch.float32)
             # Move the number of channels to the first dimension
             .movedim(2, 0)
         )

@@ -1,30 +1,39 @@
-import torch
-from sentence_transformers import SentenceTransformer
-from src.blocks.multihead_attention import MultiHeadAttention
-from src.blocks.positional_encoding import PositionalEncoding
-from src.blocks.patch_projection import PatchLinearProjection
-from pathlib import Path
 import os
+import torch
+from pathlib import Path
+from sentence_transformers import SentenceTransformer
+from src.model_components.positional_encoding import PositionalEncoding
+from src.model_components.patch_projection import PatchLinearProjection
+from src.encoder_block.encoder import ViTEncoder
+from src.model_components.mlp_head import MLPHead
 
-d_model = 4
 
-# model = SentenceTransformer("mixedbread-ai/mxbai-embed-large-v1", truncate_dim=4)
+D_MODEL = 768
+N_CLASSES = 3
+PATCH_SIZE = 16
+N_HEADS = 3
+MLP_SIZE = 3072
+N_LAYERS = 12
+DROPOUT_RATIO = 0.1
+
+# model = SentenceTransformer("mixedbread-ai/mxbai-embed-large-v1", truncate_dim=D_MODEL)
 # text = "The feline cat"
 # docs = text.split(" ")
 # input_matrix = torch.from_numpy(model.encode(docs))
 
 image_path = os.path.join(
-    Path(__file__).parent.parent.parent, "data", "test", "cats.jpg"
+    Path(__file__).parent.parent.parent, "data", "test", "cat.jpg"
 )
-patch_size = 16
-image_patches_class = PatchLinearProjection(patch_size=patch_size, d_model=d_model)
-input_matrix = image_patches_class.forward(image_path)
 
-positional_encoding_matrix = PositionalEncoding(input_matrix).forward()
-multihead_attention = MultiHeadAttention(
-    positional_encoding_matrix,
-    positional_encoding_matrix.shape[1],
-    3,
-).forward()
+# Patch projection + Positional encoding block
+x = PatchLinearProjection(patch_size=PATCH_SIZE, d_model=D_MODEL)(image_path)
+x = PositionalEncoding(x).forward()
 
-print(multihead_attention)
+for layer in range(N_LAYERS):
+    x = ViTEncoder(D_MODEL, N_HEADS, MLP_SIZE, DROPOUT_RATIO)(x)
+
+# Global Average Pooling for classification instead of using a class token (GAP)
+x = x.mean(dim=0)
+mlp_head_output = MLPHead(D_MODEL, N_CLASSES)(x)
+
+print(mlp_head_output)

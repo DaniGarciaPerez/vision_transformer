@@ -8,7 +8,7 @@ a key component of the Transformer architecture.
 import itertools
 import torch
 from torch import nn
-from src.blocks.scaled_dot_product import ScaledDotProductAttention
+from src.encoder_block.scaled_dot_product import ScaledDotProductAttention
 
 
 class MultiHeadAttention(nn.Module):
@@ -27,9 +27,7 @@ class MultiHeadAttention(nn.Module):
         d_model:int -> The dimensionality of the input sequence.
     """
 
-    def __init__(
-        self, positional_embedding_matrix: torch.tensor, d_model: int, n_heads: int
-    ):
+    def __init__(self, d_model: int, n_heads: int):
         """
         Initializes the MultiHeadAttention module.
 
@@ -40,7 +38,6 @@ class MultiHeadAttention(nn.Module):
             d_model:int -> The dimensionality of the input sequence.
         """
         super(MultiHeadAttention, self).__init__()
-        self.pe_matrix = positional_embedding_matrix
         self.n_heads = n_heads
         self.d_model = d_model
 
@@ -96,7 +93,7 @@ class MultiHeadAttention(nn.Module):
 
         return attention.forward(q, k, v)
 
-    def forward(self) -> torch.tensor:
+    def forward(self, pe_matrix) -> torch.tensor:
         """
         Computes the output of the Multi-Head Attention module.
 
@@ -107,9 +104,9 @@ class MultiHeadAttention(nn.Module):
 
         # Linear transformation
         q, k, v = (
-            self.q_weights(self.pe_matrix),
-            self.k_weights(self.pe_matrix),
-            self.v_weights(self.pe_matrix),
+            self.q_weights(pe_matrix),
+            self.k_weights(pe_matrix),
+            self.v_weights(pe_matrix),
         )
 
         # Multihead split

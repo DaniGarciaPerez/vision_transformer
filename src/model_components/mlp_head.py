@@ -4,7 +4,6 @@ Author: Daniel Garcia
 Description: This module implements the multilayer perceptron for image classification
 """
 
-import torch
 from torch import nn
 
 
@@ -42,6 +41,7 @@ class MLPHead(nn.Module):
         ---------
             torch.Tensor: The output of the softmax function for classification.
         """
+
         x = self.tanh(self.classifier_layer(x))
 
         # Output layer

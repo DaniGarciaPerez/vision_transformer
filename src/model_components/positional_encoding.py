@@ -23,10 +23,7 @@ class PositionalEncoding(nn.Module):
 
     """
 
-    def __init__(
-        self,
-        input_matrix: torch.tensor,
-    ) -> None:
+    def __init__(self, d_model, batch_size) -> None:
         """
 
         Initializes the ScaledDotProductAttention module.
@@ -38,11 +35,12 @@ class PositionalEncoding(nn.Module):
         """
         # Instantiate the base class
         super(PositionalEncoding, self).__init__()
-        self.input_matrix = input_matrix
-        self.sequence_length = input_matrix.shape[0]
-        self.d_model = input_matrix.shape[1]
+        self.d_model = d_model
+        self.batch_size = batch_size
 
-    def generate_positional_encoding_values(self) -> torch.tensor:
+    def generate_positional_encoding_values(
+        self, batch_size, sequence_length
+    ) -> torch.tensor:
         """
 
         Function to generate positional encoding for each of the tokens
@@ -62,7 +60,9 @@ class PositionalEncoding(nn.Module):
         # Create a matrix of token indices along the sequence length.
         # Each row corresponds to a position in the sequence, and columns represent different embedding dimensions.
         tokens_index_matrix = (
-            torch.arange(self.sequence_length).unsqueeze(1).expand(-1, self.d_model)
+            torch.arange(sequence_length)
+            .unsqueeze(1)
+            .expand(batch_size, -1, self.d_model)
         )
         # Calculate the positional encoding by dividing token indices by the exponential factor.
         positional_encoding = tokens_index_matrix / exponential_block
@@ -73,7 +73,7 @@ class PositionalEncoding(nn.Module):
         # Return the computed positional encoding for further use in the model.
         return positional_encoding
 
-    def forward(self):
+    def forward(self, x):
         """
         Forward pass of the PositionalEncoding module.
         Adds positional encoding to the input embeddings.
@@ -83,7 +83,11 @@ class PositionalEncoding(nn.Module):
             positional_embeddings: torch.tensor -> The input tensor with positional encoding added.
 
         """
+        batch_size, sequence_length, _ = x.shape
+
         # Generate positional encoding values
-        positional_encoding_values = self.generate_positional_encoding_values()
+        positional_encoding_values = self.generate_positional_encoding_values(
+            batch_size, sequence_length
+        )
         # Add positional encoding values to the embeddings matrix
-        return torch.add(self.input_matrix, positional_encoding_values)
+        return torch.add(x, positional_encoding_values)

@@ -24,7 +24,13 @@ class ViTEncoder(nn.Module):
         layer_norm:nn.LayerNorm -> The Layer Normalization module.
     """
 
-    def __init__(self, d_model: int, n_heads: int, mlp_size: int, dropout_ratio: float):
+    def __init__(
+        self,
+        d_model: int,
+        n_heads: int,
+        mlp_size: int,
+        dropout_ratio: float,
+    ):
         """
         Initializes the ViTEncoder block.
 

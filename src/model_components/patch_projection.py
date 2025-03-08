@@ -60,14 +60,13 @@ class PatchLinearProjection(nn.Module):
             torch.tensor -> The projected patches.
         """
         # Read the image and convert it to a tensor
-        image_matrix = (
-            torch.from_numpy(cv2.imread(image_to_transform)).to(torch.float32)
-            # Move the number of channels to the first dimension
-            .movedim(2, 0)
-        )
+        # image_matrix = (
+        #     torch.from_numpy(cv2.imread(image_to_transform)).to(torch.float32)
+        #     # Move the number of channels to the first dimension
+        #     .movedim(2, 0)
+        # )
 
         # Apply the convolutional layer or linear projection to the image
         # Then flatten and transpose
-        return torch.transpose(
-            self.linear_weights(image_matrix).flatten(start_dim=1), 0, 1
-        )
+
+        return self.linear_weights(image_to_transform).flatten(2, 3).movedim(1, -1)

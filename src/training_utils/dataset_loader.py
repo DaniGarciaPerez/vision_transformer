@@ -1,8 +1,8 @@
 """
 Author: Dani Garcia
 
-Description: TODO: Insert
-
+Description: 
+  Module for loading datasets (CIFAR100, ImageNet, FashionMnist)
 """
 
 import torch
@@ -12,60 +12,98 @@ import torchvision.transforms as transforms
 
 class LoadDataset:
     """
-    TODO: Insert docstring
+    Class for handling dataset loading and DataLoaders creation.
+
+    attributes:
+    ------------
+        transform: torchvision.transforms.Compose -> Standardized transformation for dataset items.
+        data_path:str -> Path where datasets are stored.
+        dataset_name:str -> Name of the dataset to be loaded.
+        dataset_classes:dict -> Keys represent the supported datasets and values the associated classes.
     """
 
-    def __init__(self):
+
+    def __init__(self, dataset_name:str="CIFAR100", data_path:str="./data"):
         """
-        TODO: Insert docstring
+        Initializes the LoadDataset instance.
+
+        params:
+        --------
+            dataset_name:str -> Name of the dataset to load. Defaults to "CIFAR100".
+            data_path:str -> Path for dataset storage. Defaults to "./data".
         """
         self.transform = transforms.Compose(
             [transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))]
         )
-
-    def load_cifar100(self):
+        self.data_path = data_path
+        self.dataset_name = dataset_name
+        self.dataset_classes = {
+                    "CIFAR100": torchvision.datasets.CIFAR100,
+                    "ImageNet": torchvision.datasets.ImageNet,
+                    "FashionMnist": torchvision.datasets.FashionMNIST
+                }
+    
+    def access_data(self)->tuple:
         """
-        TODO: Insert docstring
+        Retrieves the specified dataset.
+
+        returns:
+        ---------
+            (training_set, validation_set):tuple -> Training and validation dataset instances.
+        
+        raises:
+        ---------
+            ValueError: If the specified dataset is not supported.
         """
 
-        # Create datasets for training & validation, download if necessary
-        training_set = torchvision.datasets.CIFAR100(
-            "./data", train=True, transform=self.transform, download=True
+        
+        if self.dataset_name not in self.dataset_classes:
+            raise ValueError(f"Unsupported dataset: {self.dataset_name}")
+
+        dataset_class = self.dataset_classes[self.dataset_name]
+
+        training_set = dataset_class(
+            self.data_path , train=True, transform=self.transform, download=True
         )
-        validation_set = torchvision.datasets.CIFAR100(
-            "./data", train=False, transform=self.transform, download=True
+        validation_set = dataset_class(
+            self.data_path , train=False, transform=self.transform, download=True
         )
 
         return training_set, validation_set
 
-    def load_data(self, batch_size, dataset_name="CIFAR100"):
-        """
-        TODO: Insert docstring
-        """
 
+
+    def load_data(self, batch_size:int)->tuple:
+        """
+        Loads the dataset and returns DataLoaders for training and validation sets.
+
+        params:
+        ---------
+            batch_size:int -> Batch size for both training and validation datasets.
+
+        returns:
+        ---------
+            (training_set, validation_set):tuple -> Training and validation DataLoaders.
+        """
         try:
-            if dataset_name == "CIFAR100":
-                training_set, validation_set = self.load_cifar100()
 
-            if dataset_name == "ImageNet":
-                training_set, validation_set = self.load_cifar100()
+            training_set, validation_set = self.access_data()
+
+            # Create data loaders for our datasets. Shuffle for training.
+            training_loader = torch.utils.data.DataLoader(
+                training_set, batch_size=batch_size, shuffle=True
+            )
+            validation_loader = torch.utils.data.DataLoader(
+                validation_set, batch_size=batch_size, shuffle=False
+            )
+
+            print(f"Training set has {len(training_set)} instances")
+            print(f"Validation set has {len(validation_set)} instances")
+
+            return training_loader, validation_loader
 
         except Exception as e:
             print(e)
-            print(
-                "Please, select a dataset from the following list: CIFAR100, InageNet"
-            )
+            exit()
 
-        # Create data loaders for our datasets; shuffle for training, not for validation
-        training_loader = torch.utils.data.DataLoader(
-            training_set, batch_size=batch_size, shuffle=True
-        )
-        validation_loader = torch.utils.data.DataLoader(
-            validation_set, batch_size=batch_size, shuffle=False
-        )
 
-        # Report split sizes
-        print("Training set has {} instances".format(len(training_set)))
-        print("Validation set has {} instances".format(len(validation_set)))
-
-        return training_loader, validation_loader

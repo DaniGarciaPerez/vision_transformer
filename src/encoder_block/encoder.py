@@ -87,4 +87,3 @@ class ViTEncoder(nn.Module):
         except Exception as e:
 
             print(f"Failed in pass: {e}")
-            # raise

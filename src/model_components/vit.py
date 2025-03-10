@@ -13,7 +13,22 @@ from src.model_components.mlp_head import MLPHead
 
 
 class VisionTransformer(nn.Module):
-    """TODO: Insert docstring"""
+    """
+    Vision Transformer (ViT) model for image classification.
+
+    This implementation combines patch linear projection, positional encoding, 
+    a set of ViT encoder layers, and a final MLP head for classification.
+
+    attributes:
+    ------------
+        n_layers:int -> Number of encoder layers.
+        d_model:int -> Dimensionality of the model's embeddings.
+        linear_projection:PatchLinearProjection -> Projects input patches to embeddings.
+        dropout:nn.Dropout -> Applies dropout for regularization of the network.
+        vit_encoder:ViTEncoder -> Stack of encoder layers.
+        mlp_head:MLPHead -> Final MLP head for classification.
+        positional_encoding:PositionalEncoding -> Adds positional information to embeddings.
+    """
 
     def __init__(
         self,
@@ -27,7 +42,10 @@ class VisionTransformer(nn.Module):
         n_channels,
         batch_size,
     ):
-        """TODO: Insert docstring"""
+        """
+        Initializes the Vision Transformer model.
+
+        """
 
         super(VisionTransformer, self).__init__()
         self.n_layers = n_layers
@@ -40,16 +58,30 @@ class VisionTransformer(nn.Module):
         self.mlp_head = MLPHead(d_model, n_classes)
         self.positional_encoding = PositionalEncoding(d_model, batch_size)
 
-    def forward(self, x):
-        """TODO: Insert docstring"""
-        # Patch projection + Positional encoding block
-        x = self.linear_projection(x)
-        x = self.positional_encoding(x)
-        x = self.dropout(x)
-        for layer in range(self.n_layers):
-            x = self.vit_encoder(x)
+    def forward(self, x:torch.Tensor)->torch.Tensor:
+        """
+        Forward pass through the Vision Transformer model.
 
-        # Global Average Pooling for classification instead of using a class token (GAP)
-        x = x.mean(dim=1)
+        args:
+        ------
+            x:torch.Tensor -> Input image tensor.
 
-        return self.mlp_head(x)
+        returns:
+        ---------
+            torch.Tensor: Output for the classification task.
+        """
+        try:
+            # Patch projection + Positional encoding block
+            x = self.linear_projection(x)
+            x = self.positional_encoding(x)
+            x = self.dropout(x)
+            for layer in range(self.n_layers):
+                x = self.vit_encoder(x)
+
+            # Global Average Pooling for classification instead of using a class token (GAP)
+            x = x.mean(dim=1)
+
+            return self.mlp_head(x)
+        
+        except Exception as e:
+            print(f"An error ocurred on the forward pass: {e}")

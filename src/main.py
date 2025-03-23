@@ -28,6 +28,7 @@ if __name__ == "__main__":
     PATCH_SIZE = int(os.getenv("PATCH_SIZE"))
     N_HEADS = int(os.getenv("N_HEADS"))
     MLP_SIZE = int(os.getenv("MLP_SIZE"))
+    HIDDEN_LAYER_SIZE = int(os.getenv("HIDDEN_LAYER_SIZE"))
     N_LAYERS = int(os.getenv("N_LAYERS"))
     DROPOUT_RATIO = float(os.getenv("DROPOUT_RATIO"))
     EPOCHS = int(os.getenv("EPOCHS"))
@@ -42,12 +43,12 @@ if __name__ == "__main__":
         patch_size=PATCH_SIZE,
         d_model=D_MODEL,
         mlp_size=MLP_SIZE,
+        hidden_class_layer=HIDDEN_LAYER_SIZE,
         n_heads=N_HEADS,
         dropout_ratio=DROPOUT_RATIO,
         n_layers=N_LAYERS,
         n_classes=N_CLASSES,
         n_channels=N_CHANNELS,
-        batch_size=BATCH_SIZE,
     )
 
     # Define loss function

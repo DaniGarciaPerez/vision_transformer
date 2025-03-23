@@ -32,15 +32,15 @@ class VisionTransformer(nn.Module):
 
     def __init__(
         self,
-        patch_size,
-        d_model,
-        mlp_size,
-        n_heads,
-        dropout_ratio,
-        n_layers,
-        n_classes,
-        n_channels,
-        batch_size,
+        patch_size:int,
+        d_model:int,
+        mlp_size:int,
+        hidden_class_layer:int,
+        n_heads:int,
+        dropout_ratio:float,
+        n_layers:int,
+        n_classes:int,
+        n_channels:int,
     ):
         """
         Initializes the Vision Transformer model.
@@ -53,10 +53,11 @@ class VisionTransformer(nn.Module):
         self.linear_projection = PatchLinearProjection(
             patch_size=patch_size, d_model=d_model, input_channels=n_channels
         )
+        self.positional_encoding = PositionalEncoding(d_model)
         self.dropout = nn.Dropout(p=dropout_ratio)
         self.vit_encoder = ViTEncoder(d_model, n_heads, mlp_size, dropout_ratio)
-        self.mlp_head = MLPHead(d_model, n_classes)
-        self.positional_encoding = PositionalEncoding(d_model, batch_size)
+        self.mlp_head = MLPHead(d_model, n_classes, hidden_class_layer)
+
 
     def forward(self, x:torch.Tensor)->torch.Tensor:
         """

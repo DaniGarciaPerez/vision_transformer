@@ -45,16 +45,19 @@ class ViTEncoder(nn.Module):
         assert (
             isinstance(d_model, int)
             and isinstance(n_heads, int)
-            and isinstance(mlp_size, int) == True
+            and isinstance(mlp_size, int)
         ), "d_model, n_heads, mlp_size must be integers"
 
-        self.MSA = MultiHeadAttention(d_model, n_heads)
-        self.MLP = MLP(d_model, mlp_size, dropout_ratio)
-        self.layer_norm = nn.LayerNorm(d_model)
+        self.encoder_block = nn.Sequential(
+            nn.LayerNorm(d_model),
+            MultiHeadAttention(d_model, n_heads),
+            nn.LayerNorm(d_model),
+            MLP(d_model, mlp_size, dropout_ratio))
+
 
     def forward(self, pe_matrix: torch.Tensor) -> torch.Tensor:
         """
-        Forward pass through the ViTEncoder block.
+        Forward pass through the ViT Encoder block.
 
         params:
         ---------
@@ -64,27 +67,14 @@ class ViTEncoder(nn.Module):
         ---------
             torch.Tensor: The output tensor after passing through the Encoder block.
         """
+
+        assert isinstance(pe_matrix, torch.Tensor), "pe_matrix must be a torch.Tensor"
+        assert len(pe_matrix.shape) == 3, "pe_matrix must have shape (batch_size, sequence_length, d_model)"
+
         try:
 
-            # Normalize the input patch embeddings
-            normalized_pe_patches = self.layer_norm(pe_matrix)
-            # Apply the Multi-Head Attention mechanism
-            multihead_attention_output = self.MSA(normalized_pe_patches)
-            # Add residual connection
-            residual_multihead_attention = torch.add(
-                multihead_attention_output, pe_matrix
-            )
-            # Normalize the output of the MSA
-            normalized_multihead_attention = self.layer_norm(
-                residual_multihead_attention
-            )
-            # Apply MLP block
-            mlp_layer = self.MLP(normalized_multihead_attention)
-
-            # Add residual connection
-            return torch.add(mlp_layer, residual_multihead_attention)
+            return self.encoder_block(pe_matrix)
 
         except Exception as e:
 
-            print(f"Failed in pass: {e}")
-            # raise
+            print(f"Error in forward pass: {e}")

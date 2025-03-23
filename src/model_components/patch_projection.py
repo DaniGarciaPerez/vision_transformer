@@ -7,7 +7,6 @@ linear layer to get crops for the image to process.
 """
 
 import torch
-import cv2
 from torch import nn
 
 
@@ -47,26 +46,17 @@ class PatchLinearProjection(nn.Module):
             stride=patch_size,
         )
 
-    def forward(self, image_to_transform: str) -> torch.tensor:
+    def forward(self, image_tensor: torch.Tensor) -> torch.Tensor:
         """
         Applies the linear projection to the input image.
 
         params:
         --------
-            image_to_transform:str -> The path to the input image.
+            image_tensor:torch.Tensor -> Image tensor
 
         returns:
         ---------
-            torch.tensor -> The projected patches.
+            torch.Tensor -> The projected patches.
         """
-        # Read the image and convert it to a tensor
-        # image_matrix = (
-        #     torch.from_numpy(cv2.imread(image_to_transform)).to(torch.float32)
-        #     # Move the number of channels to the first dimension
-        #     .movedim(2, 0)
-        # )
 
-        # Apply the convolutional layer or linear projection to the image
-        # Then flatten and transpose
-
-        return self.linear_weights(image_to_transform).flatten(2, 3).movedim(1, -1)
+        return self.linear_weights(image_tensor).flatten(2, 3).movedim(1, -1)

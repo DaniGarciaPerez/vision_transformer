@@ -6,7 +6,10 @@
 
 Hey, thank you for passing by! 
 
-This is a repo to explore the implementation from scratch of the Vision Transformer architecture based on the paper ["An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale". Alexey Dosovitskiy et al. (2021)](https://arxiv.org/pdf/2010.11929) using PyTorch. I tried to keep everything as much similar to the paper as possible. Regarding the last layer of the network (the MLP layer used for classification), this implementation relies on Global Average Pooling (GAP) rather than the CLS token (similar to [BERT](https://arxiv.org/pdf/1810.04805)) based implementation used in the original paper, although they have a similar performance if trained with the right hyperparameters.
+This is a repo to explore the implementation of the Vision Transformer architecture based on the paper ["An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale". Alexey Dosovitskiy et al. (2021)](https://arxiv.org/pdf/2010.11929) using PyTorch. I tried to keep everything as much similar to the original paper as possible. However, I added two minor changes that differ from the original implementation:
+
+- Regarding the last layer of the network (the MLP layer used for classification), this implementation relies on Global Average Pooling (GAP) rather than the CLS token (similar to [BERT](https://arxiv.org/pdf/1810.04805)) based implementation used in the original paper, although they have a similar performance if trained with the right hyperparameters.
+- For the image patch linear projection I used a Conv2D layer with a stride equal to the patch size (effectively acting as the kernel). The resulting convolved features are then flattened and passed to the positional encoding transformation.
 
 ## **Content**
 

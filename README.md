@@ -1,11 +1,8 @@
-## <p align="center"> 🚧 REPO IN PROGRESS 🚧 </p>
-
 ## <p align="center"> **Vision Transformers (ViT) from scratch** 👁️ </p>
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-
+[![Repo Status](https://img.shields.io/badge/Repo%20Status-In%20Progress-red.svg)](https://github.com/DaniGarciaPerez/vision_transformer)
 
 Hey, thank you for passing by! 
 
@@ -13,13 +10,10 @@ This is a repo to explore the implementation from scratch of the Vision Transfor
 
 ## **Content**
 
-[1. Structure of the project](#structure-of-the-project)
-
-[2. Disclaimer](#disclaimer)
-
-[3. Setup and Use](#setup-and-use)
-
-[4. Datasets](#datasets)
+1. [Structure of the Project](#structure-of-the-project)
+2. [Environment and Dependencies](#environment-and-dependencies)
+3. [Setup and Use](#setup-and-use)
+4. [Supported Datasets](#supported-datasets)
 
 ## **Structure of the project**
 
@@ -48,14 +42,14 @@ This is a repo to explore the implementation from scratch of the Vision Transfor
         └── train.py
 ```
 
-## **Disclaimer**
+## **Environment and Dependencies**
 
 This project was developed using:
 
 - python 3.12.
 - python modules as described in requirements.txt
 
-## **Datasets supported**
+## **Supported Datasets**
 
 - [CIFAR100](https://www.cs.toronto.edu/~kriz/cifar.html)
 - [ImageNet](https://www.image-net.org/)
@@ -64,6 +58,8 @@ This project was developed using:
 ## **Setup and Use**
 
 In order to train a model using any of the dataset listed above:
-1. Define the desired hyperparameters on the parameters.env file for the experiment.
-2. Run the following command on the root folder:
-   ```python .\src\main.py```
+
+1. Install Dependencies: ```pip install -r requirements.txt```
+2. Configure Hyperparameters: Modify parameters.env as needed.
+3. Execute ```python .\src\main.py``` from the project root.
+

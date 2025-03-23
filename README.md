@@ -1,8 +1,11 @@
 ## <p align="center"> **Vision Transformers (ViT) from scratch** 👁️ </p>
 
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Repo Status](https://img.shields.io/badge/Repo%20Status-In%20Progress-red.svg)](https://github.com/DaniGarciaPerez/vision_transformer)
+<div align="center">
+    
+  <a href="">[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)</a>
+  <a href="">[![Repo Status](https://img.shields.io/badge/Repo%20Status-In%20Progress-red.svg)](https://github.com/DaniGarciaPerez/vision_transformer)</a>
+    
+</div>
 
 Hey, thank you for passing by! 
 

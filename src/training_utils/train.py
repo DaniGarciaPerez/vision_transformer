@@ -17,6 +17,7 @@ class TrainModel:
     """
     TODO: Insert docstring
     """
+
     def __init__(self, model: object, loss_fn: object, optimizer: object, epochs: int):
         self.model = model
         self.loss_fn = loss_fn

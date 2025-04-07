@@ -52,8 +52,8 @@ class ViTEncoder(nn.Module):
             nn.LayerNorm(d_model),
             MultiHeadAttention(d_model, n_heads),
             nn.LayerNorm(d_model),
-            MLP(d_model, mlp_size, dropout_ratio))
-
+            MLP(d_model, mlp_size, dropout_ratio),
+        )
 
     def forward(self, pe_matrix: torch.Tensor) -> torch.Tensor:
         """
@@ -69,7 +69,9 @@ class ViTEncoder(nn.Module):
         """
 
         assert isinstance(pe_matrix, torch.Tensor), "pe_matrix must be a torch.Tensor"
-        assert len(pe_matrix.shape) == 3, "pe_matrix must have shape (batch_size, sequence_length, d_model)"
+        assert (
+            len(pe_matrix.shape) == 3
+        ), "pe_matrix must have shape (batch_size, sequence_length, d_model)"
 
         try:
 

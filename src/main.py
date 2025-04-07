@@ -1,7 +1,7 @@
 """
 Author: Dani Garcia
 
-Description: 
+Description:
     Main entry point for training a Vision Transformer (ViT) model on a specified dataset.
 
 Usage:
@@ -58,11 +58,13 @@ if __name__ == "__main__":
     optimizer = LoadOptimizer(
         model_parameters=model.parameters(),
         optimizer=OPTIMIZER,
-        learning_rate=LEARNING_RATE
+        learning_rate=LEARNING_RATE,
     ).get_optimizer()
 
     # Load Training and Validation Datasets
-    training_loader, validation_loader = LoadDataset(dataset_name=DATASET).load_data(batch_size=BATCH_SIZE)
+    training_loader, validation_loader = LoadDataset(dataset_name=DATASET).load_data(
+        batch_size=BATCH_SIZE
+    )
 
     # Train the Model
     model_trainer = TrainModel(model, loss_fn, optimizer, epochs=EPOCHS)

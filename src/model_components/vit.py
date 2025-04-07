@@ -16,7 +16,7 @@ class VisionTransformer(nn.Module):
     """
     Vision Transformer (ViT) model for image classification.
 
-    This implementation combines patch linear projection, positional encoding, 
+    This implementation combines patch linear projection, positional encoding,
     a set of ViT encoder layers, and a final MLP head for classification.
 
     attributes:
@@ -32,15 +32,15 @@ class VisionTransformer(nn.Module):
 
     def __init__(
         self,
-        patch_size:int,
-        d_model:int,
-        mlp_size:int,
-        hidden_class_layer:int,
-        n_heads:int,
-        dropout_ratio:float,
-        n_layers:int,
-        n_classes:int,
-        n_channels:int,
+        patch_size: int,
+        d_model: int,
+        mlp_size: int,
+        hidden_class_layer: int,
+        n_heads: int,
+        dropout_ratio: float,
+        n_layers: int,
+        n_classes: int,
+        n_channels: int,
     ):
         """
         Initializes the Vision Transformer model.
@@ -58,8 +58,7 @@ class VisionTransformer(nn.Module):
         self.vit_encoder = ViTEncoder(d_model, n_heads, mlp_size, dropout_ratio)
         self.mlp_head = MLPHead(d_model, n_classes, hidden_class_layer)
 
-
-    def forward(self, x:torch.Tensor)->torch.Tensor:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Forward pass through the Vision Transformer model.
 
@@ -83,6 +82,6 @@ class VisionTransformer(nn.Module):
             x = x.mean(dim=1)
 
             return self.mlp_head(x)
-        
+
         except Exception as e:
             print(f"An error ocurred on the forward pass: {e}")

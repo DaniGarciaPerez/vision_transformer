@@ -1,11 +1,12 @@
 """
 Author: Dani Garcia
 
-Description: 
+Description:
   Module for loading multiple optimizers for PyTorch models.
 """
 
 import torch
+
 
 class LoadOptimizer:
     """
@@ -20,7 +21,12 @@ class LoadOptimizer:
 
     """
 
-    def __init__(self, model_parameters: dict, optimizer: str = "ADAM", learning_rate: float = 0.003):
+    def __init__(
+        self,
+        model_parameters: dict,
+        optimizer: str = "ADAM",
+        learning_rate: float = 0.003,
+    ):
         """
         Initializes the LoadOptimizer instance.
 
@@ -29,16 +35,16 @@ class LoadOptimizer:
             KeyError : If the specified optimizer is not supported.
         """
         self.optimizer = optimizer.upper()
-        
-        self.optimizers_list = {
-            "ADAM": torch.optim.Adam
-        }
+
+        self.optimizers_list = {"ADAM": torch.optim.Adam}
         self.learning_rate = learning_rate
         self.model_parameters = model_parameters
-        
+
         # Check if the specified optimizer is supported
         if self.optimizer not in self.optimizers_list:
-            raise KeyError(f"Unsupported optimizer: {optimizer}. Supported optimizers: {list(self.optimizers_list.keys())}")
+            raise KeyError(
+                f"Unsupported optimizer: {optimizer}. Supported optimizers: {list(self.optimizers_list.keys())}"
+            )
 
     def get_optimizer(self):
         """
@@ -49,4 +55,6 @@ class LoadOptimizer:
         torch.optim.Optimizer : The initialized optimizer instance.
         """
 
-        return self.optimizers_list[self.optimizer](self.model_parameters, lr=self.learning_rate)
+        return self.optimizers_list[self.optimizer](
+            self.model_parameters, lr=self.learning_rate
+        )

@@ -21,7 +21,7 @@ class MLPHead(nn.Module):
             hidden_dim (int, optional): The size of the hidden layer. Defaults to 128.
     """
 
-    def __init__(self, d_model:int, n_classes:int, hidden_dim:int):
+    def __init__(self, d_model: int, n_classes: int, hidden_dim: int):
         """
         Initializes the MLP with the given input matrix and output size.
 
@@ -32,9 +32,8 @@ class MLPHead(nn.Module):
         self.softmax = nn.Softmax(dim=0)
         self.relu = nn.ReLU()
         self.tanh = nn.Tanh()
-        
 
-    def forward(self, x:torch.Tensor):
+    def forward(self, x: torch.Tensor):
         """
         Defines the forward pass through the network.
 

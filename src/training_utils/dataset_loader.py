@@ -1,7 +1,7 @@
 """
 Author: Dani Garcia
 
-Description: 
+Description:
   Module for loading datasets (CIFAR100, ImageNet, FashionMnist)
 """
 
@@ -22,8 +22,7 @@ class LoadDataset:
         dataset_classes:dict -> Keys represent the supported datasets and values the associated classes.
     """
 
-
-    def __init__(self, dataset_name:str="CIFAR100", data_path:str="./data"):
+    def __init__(self, dataset_name: str = "CIFAR100", data_path: str = "./data"):
         """
         Initializes the LoadDataset instance.
 
@@ -38,42 +37,39 @@ class LoadDataset:
         self.data_path = data_path
         self.dataset_name = dataset_name
         self.dataset_classes = {
-                    "CIFAR100": torchvision.datasets.CIFAR100,
-                    "ImageNet": torchvision.datasets.ImageNet,
-                    "FashionMnist": torchvision.datasets.FashionMNIST
-                }
-    
-    def access_data(self)->tuple:
+            "CIFAR100": torchvision.datasets.CIFAR100,
+            "ImageNet": torchvision.datasets.ImageNet,
+            "FashionMnist": torchvision.datasets.FashionMNIST,
+        }
+
+    def access_data(self) -> tuple:
         """
         Retrieves the specified dataset.
 
         returns:
         ---------
             (training_set, validation_set):tuple -> Training and validation dataset instances.
-        
+
         raises:
         ---------
             ValueError: If the specified dataset is not supported.
         """
 
-        
         if self.dataset_name not in self.dataset_classes:
             raise ValueError(f"Unsupported dataset: {self.dataset_name}")
 
         dataset_class = self.dataset_classes[self.dataset_name]
 
         training_set = dataset_class(
-            self.data_path , train=True, transform=self.transform, download=True
+            self.data_path, train=True, transform=self.transform, download=True
         )
         validation_set = dataset_class(
-            self.data_path , train=False, transform=self.transform, download=True
+            self.data_path, train=False, transform=self.transform, download=True
         )
 
         return training_set, validation_set
 
-
-
-    def load_data(self, batch_size:int)->tuple:
+    def load_data(self, batch_size: int) -> tuple:
         """
         Loads the dataset and returns DataLoaders for training and validation sets.
 
@@ -105,5 +101,3 @@ class LoadDataset:
         except Exception as e:
             print(e)
             exit()
-
-

@@ -1,7 +1,7 @@
 """
 Author: Dani Garcia
 
-Description: This script implements the Scaled Dot-Product Attention 
+Description: This script implements the Scaled Dot-Product Attention
 mechanism as described in the paper "Attention is All You Need" by Vaswani et al. (2017).
 
 """

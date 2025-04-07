@@ -22,7 +22,7 @@ class PositionalEncoding(nn.Module):
 
     """
 
-    def __init__(self, d_model:int) -> None:
+    def __init__(self, d_model: int) -> None:
         """
 
         Initializes the ScaledDotProductAttention module.
@@ -33,7 +33,7 @@ class PositionalEncoding(nn.Module):
         self.d_model = d_model
 
     def generate_positional_encoding_values(
-        self, batch_size:int, sequence_length:int
+        self, batch_size: int, sequence_length: int
     ) -> torch.tensor:
         """
 
@@ -54,15 +54,11 @@ class PositionalEncoding(nn.Module):
         # Create a tensor of indices with float data type to create indices for the embeddings dimension.
         embedding_indices = torch.arange(self.d_model, dtype=torch.float)
         # Calculate an exponential factor for positional encoding using a base of 10000.
-        exponential_block = torch.pow(
-            10000, (2 * embedding_indices / self.d_model)
-        ) 
+        exponential_block = torch.pow(10000, (2 * embedding_indices / self.d_model))
         # Create a matrix of token indices along the sequence length.
         # Each row corresponds to a position in the sequence, and columns represent different embedding dimensions.
         tokens_index_matrix = (
-            torch.arange(sequence_length)
-            .unsqueeze(1)
-            .expand(-1, self.d_model)
+            torch.arange(sequence_length).unsqueeze(1).expand(-1, self.d_model)
         )
         # Calculate the positional (element wise division).
         positional_encoding = tokens_index_matrix / exponential_block
@@ -70,10 +66,10 @@ class PositionalEncoding(nn.Module):
         positional_encoding[0::2] = torch.sin(positional_encoding[0::2])
         # Apply the cosine function to odd-indexed dimensions (1, 3, 5, ...).
         positional_encoding[1::2] = torch.cos(positional_encoding[1::2])
-        
+
         return positional_encoding
 
-    def forward(self, x:torch.Tensor):
+    def forward(self, x: torch.Tensor):
         """
         Forward pass of the PositionalEncoding module.
         Adds positional encoding to the input embeddings.

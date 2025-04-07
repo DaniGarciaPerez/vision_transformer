@@ -3,8 +3,7 @@ Author: Dani Garcia
 
 Description: TODO: Insert
 
-
-Code reference for some of this code: https://pytorch.org/tutorials/beginner/nn_tutorial.html#training-a-model
+Code reference for some of this code: https://github.com/pytorch/tutorials/blob/main/beginner_source/introyt/trainingyt.py
 
 """
 
